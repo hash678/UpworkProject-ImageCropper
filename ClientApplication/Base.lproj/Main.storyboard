@@ -17,25 +17,6 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="105" translatesAutoresizingMaskIntoConstraints="NO" id="kTn-Pu-gPf">
-                                <rect key="frame" x="162.5" y="392.5" width="89" height="165"/>
-                                <subviews>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="B4j-jp-Mf3">
-                                        <rect key="frame" x="0.0" y="0.0" width="89" height="30"/>
-                                        <state key="normal" title="Split"/>
-                                        <connections>
-                                            <segue destination="6tc-Bo-Ms6" kind="show" id="Dx7-IT-MJ6"/>
-                                        </connections>
-                                    </button>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="enZ-Z0-E1c">
-                                        <rect key="frame" x="0.0" y="135" width="89" height="30"/>
-                                        <state key="normal" title="Put Together"/>
-                                        <connections>
-                                            <segue destination="9gB-Pl-JkO" kind="show" id="IUi-nM-oSU"/>
-                                        </connections>
-                                    </button>
-                                </subviews>
-                            </stackView>
                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="vdr-Vz-4IS">
                                 <rect key="frame" x="8" y="96" width="398" height="100"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
@@ -49,84 +30,111 @@
                                     <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                                 </collectionViewFlowLayout>
                                 <cells>
-                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="sFD-hz-B7v">
-                                        <rect key="frame" x="0.0" y="0.0" width="128" height="128"/>
+                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="mySlicesCell" id="sFD-hz-B7v" customClass="SlicesCell" customModule="ClientApplication" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="0.0" width="100" height="100"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <collectionViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="OXR-o3-itT">
-                                            <rect key="frame" x="0.0" y="0.0" width="128" height="128"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="100" height="100"/>
                                             <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Slices4Icon" translatesAutoresizingMaskIntoConstraints="NO" id="6Bv-hM-0J0">
+                                                    <rect key="frame" x="0.0" y="0.0" width="100" height="100"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="width" constant="100" id="NcX-oO-DHp"/>
+                                                        <constraint firstAttribute="height" constant="100" id="rJt-9m-Uf3"/>
+                                                    </constraints>
+                                                </imageView>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstAttribute="trailing" secondItem="6Bv-hM-0J0" secondAttribute="trailing" id="jDV-q4-pkv"/>
+                                                <constraint firstItem="6Bv-hM-0J0" firstAttribute="top" secondItem="OXR-o3-itT" secondAttribute="top" id="kZB-OZ-1bR"/>
+                                                <constraint firstItem="6Bv-hM-0J0" firstAttribute="leading" secondItem="OXR-o3-itT" secondAttribute="leading" id="x4g-St-2d1"/>
+                                                <constraint firstAttribute="bottom" secondItem="6Bv-hM-0J0" secondAttribute="bottom" id="yMg-Zw-cmV"/>
+                                            </constraints>
                                         </collectionViewCellContentView>
+                                        <connections>
+                                            <outlet property="imageView" destination="6Bv-hM-0J0" id="bVA-fs-4ar"/>
+                                        </connections>
                                     </collectionViewCell>
                                 </cells>
+                                <connections>
+                                    <outlet property="dataSource" destination="BYZ-38-t0r" id="9j7-z3-2pc"/>
+                                    <outlet property="delegate" destination="BYZ-38-t0r" id="YgF-hD-EcM"/>
+                                </connections>
                             </collectionView>
+                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="30" translatesAutoresizingMaskIntoConstraints="NO" id="bQu-aD-KfX">
+                                <rect key="frame" x="157" y="324.5" width="100" height="301"/>
+                                <subviews>
+                                    <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="15" translatesAutoresizingMaskIntoConstraints="NO" id="P7O-gz-QVv">
+                                        <rect key="frame" x="0.0" y="0.0" width="100" height="135.5"/>
+                                        <subviews>
+                                            <imageView clipsSubviews="YES" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="splitIcon" translatesAutoresizingMaskIntoConstraints="NO" id="4CH-5k-f5J">
+                                                <rect key="frame" x="0.0" y="0.0" width="100" height="100"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="width" constant="100" id="IAW-yZ-18e"/>
+                                                    <constraint firstAttribute="height" constant="100" id="LK0-VD-sgK"/>
+                                                </constraints>
+                                            </imageView>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Split" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Qhp-os-dXQ">
+                                                <rect key="frame" x="0.0" y="115" width="100" height="20.5"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                <nil key="textColor"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                        </subviews>
+                                    </stackView>
+                                    <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="15" translatesAutoresizingMaskIntoConstraints="NO" id="4q2-s3-U3g">
+                                        <rect key="frame" x="0.0" y="165.5" width="100" height="135.5"/>
+                                        <subviews>
+                                            <imageView clipsSubviews="YES" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="glueIcon" translatesAutoresizingMaskIntoConstraints="NO" id="A5b-Wu-fjb">
+                                                <rect key="frame" x="0.0" y="0.0" width="100" height="100"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="width" constant="100" id="Fk1-ke-ayx"/>
+                                                    <constraint firstAttribute="height" constant="100" id="uKF-yk-6bI"/>
+                                                </constraints>
+                                            </imageView>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Put Together" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="UmK-pC-MJ2">
+                                                <rect key="frame" x="0.0" y="115" width="100" height="20.5"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                <nil key="textColor"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                        </subviews>
+                                    </stackView>
+                                </subviews>
+                            </stackView>
                         </subviews>
                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                         <constraints>
-                            <constraint firstItem="kTn-Pu-gPf" firstAttribute="centerY" secondItem="6Tk-OE-BBY" secondAttribute="centerY" id="hIW-o5-ig4"/>
+                            <constraint firstItem="bQu-aD-KfX" firstAttribute="centerX" secondItem="6Tk-OE-BBY" secondAttribute="centerX" id="BfY-lE-cm8"/>
+                            <constraint firstItem="bQu-aD-KfX" firstAttribute="centerY" secondItem="6Tk-OE-BBY" secondAttribute="centerY" id="XOc-yS-Qrs"/>
                             <constraint firstItem="vdr-Vz-4IS" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="8" id="k1T-DO-efw"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="vdr-Vz-4IS" secondAttribute="trailing" constant="8" id="oYt-E5-0UQ"/>
                             <constraint firstItem="vdr-Vz-4IS" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="8" id="u2e-IA-f37"/>
-                            <constraint firstItem="kTn-Pu-gPf" firstAttribute="centerX" secondItem="6Tk-OE-BBY" secondAttribute="centerX" id="wOf-gl-v6c"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>
                     <navigationItem key="navigationItem" id="3pz-5q-as5"/>
+                    <connections>
+                        <outlet property="glueImageButton" destination="A5b-Wu-fjb" id="YBg-tN-v4C"/>
+                        <outlet property="slicesCollectionView" destination="vdr-Vz-4IS" id="tvE-18-eP9"/>
+                        <outlet property="splitImageButton" destination="4CH-5k-f5J" id="JaK-6Q-vzl"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1047.8260869565217" y="112.5"/>
-        </scene>
-        <!--Split View Controller-->
-        <scene sceneID="9m1-7g-XkG">
-            <objects>
-                <viewController id="6tc-Bo-Ms6" customClass="SplitViewController" customModule="ClientApplication" customModuleProvider="target" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="fdY-g4-Mjz">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <subviews>
-                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="LEL-t9-aDX">
-                                <rect key="frame" x="8" y="375" width="398" height="200"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="200" id="Fh9-lp-ZPa"/>
-                                </constraints>
-                            </imageView>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="jeI-da-ncp">
-                                <rect key="frame" x="190" y="583" width="34" height="30"/>
-                                <state key="normal" title="Crop"/>
-                                <connections>
-                                    <action selector="cropImage:" destination="6tc-Bo-Ms6" eventType="touchUpInside" id="dkj-WR-f39"/>
-                                </connections>
-                            </button>
-                        </subviews>
-                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
-                        <constraints>
-                            <constraint firstItem="LEL-t9-aDX" firstAttribute="leading" secondItem="wMM-uy-pgx" secondAttribute="leading" constant="8" id="7Yw-2G-8tP"/>
-                            <constraint firstItem="wMM-uy-pgx" firstAttribute="trailing" secondItem="LEL-t9-aDX" secondAttribute="trailing" constant="8" id="GOy-dY-dWv"/>
-                            <constraint firstItem="jeI-da-ncp" firstAttribute="top" secondItem="LEL-t9-aDX" secondAttribute="bottom" constant="8" id="GZa-pM-Dqc"/>
-                            <constraint firstItem="LEL-t9-aDX" firstAttribute="centerY" secondItem="wMM-uy-pgx" secondAttribute="centerY" id="PfQ-UH-Lyx"/>
-                            <constraint firstItem="jeI-da-ncp" firstAttribute="centerX" secondItem="wMM-uy-pgx" secondAttribute="centerX" id="jbp-yr-iRs"/>
-                        </constraints>
-                        <viewLayoutGuide key="safeArea" id="wMM-uy-pgx"/>
-                    </view>
-                    <navigationItem key="navigationItem" id="bEj-yT-qW3"/>
-                    <connections>
-                        <outlet property="mainImageView" destination="LEL-t9-aDX" id="Z6H-9k-R5a"/>
-                    </connections>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="o1T-S2-22K" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="1956.521739130435" y="51.5625"/>
+            <point key="canvasLocation" x="1081" y="113"/>
         </scene>
         <!--Glue View Controller-->
         <scene sceneID="Kfp-rP-cjI">
             <objects>
-                <viewController id="9gB-Pl-JkO" customClass="GlueViewController" customModule="ClientApplication" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="glueViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="9gB-Pl-JkO" customClass="GlueViewController" customModule="ClientApplication" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="S4b-PF-BgZ">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="OLF-4M-cDt">
-                                <rect key="frame" x="0.0" y="88" width="414" height="774"/>
+                                <rect key="frame" x="0.0" y="44" width="414" height="818"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                                 <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="0.0" minimumInteritemSpacing="0.0" id="afQ-2P-ZtG">
                                     <size key="itemSize" width="128" height="128"/>
@@ -142,7 +150,7 @@
                                             <rect key="frame" x="0.0" y="0.0" width="128" height="128"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="Php-v9-zoa">
+                                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="Php-v9-zoa">
                                                     <rect key="frame" x="0.0" y="0.0" width="128" height="128"/>
                                                 </imageView>
                                             </subviews>
@@ -180,7 +188,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="PuP-cU-6eg" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="341" y="941"/>
+            <point key="canvasLocation" x="2067" y="113"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="csv-eO-eHb">
@@ -201,4 +209,9 @@
             <point key="canvasLocation" x="137.68115942028987" y="112.5"/>
         </scene>
     </scenes>
+    <resources>
+        <image name="Slices4Icon" width="133" height="126"/>
+        <image name="glueIcon" width="512" height="512"/>
+        <image name="splitIcon" width="512" height="512"/>
+    </resources>
 </document>

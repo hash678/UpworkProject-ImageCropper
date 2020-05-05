@@ -11,7 +11,7 @@ import UIKit
 import Photos
 class SquareImageCell:UICollectionViewCell{
     
-    var cellID:Int = 0
+    var cellID:Int = -1
     
 
     @IBOutlet weak var imageView: UIImageView!

@@ -53,7 +53,9 @@ class GlueViewController: UIViewController {
         presentImagePicker(imagePicker, animated: true, select: nil, deselect: nil, cancel: nil, finish: { (assets) in
             
             self.imagesDatasource = assets.sorted(by: { (a, b) -> Bool in
-                a.creationDate ?? Date() < b.creationDate  ?? Date()
+                
+
+                return (a.creationDate ?? Date()).timeIntervalSince1970 < (b.creationDate  ?? Date()).timeIntervalSince1970
             })
             
             
@@ -184,8 +186,14 @@ extension GlueViewController{
     fileprivate func swapImages(firstView:UIView, secondView:UIView){
           let cellA = firstView as! SquareImageCell
                      let cellB = secondView as! SquareImageCell
+        
+        //cellA.imageView.alpha = 0.8
+        //cellB.imageView.alpha = 0.8
                      swapPlaces(indexA: cellA.cellID, indexB: cellB.cellID, array: &self.imagesDatasource)
                      
+        let temp = cellA.cellID
+        cellA.cellID = cellB.cellID
+        cellB.cellID = temp
       }
     
     

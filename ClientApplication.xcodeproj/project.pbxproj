@@ -16,6 +16,8 @@
 		1971266C24618C0D00A6E326 /* SplitViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1971266B24618C0D00A6E326 /* SplitViewController.swift */; };
 		1971266E24618EE600A6E326 /* ImageCropper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1971266D24618EE600A6E326 /* ImageCropper.swift */; };
 		197126722461B08F00A6E326 /* SquareImageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 197126712461B08F00A6E326 /* SquareImageCell.swift */; };
+		197126762461C46B00A6E326 /* SlicesCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 197126752461C46B00A6E326 /* SlicesCell.swift */; };
+		1971267924621C2400A6E326 /* ImageSaveOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1971267824621C2400A6E326 /* ImageSaveOperation.swift */; };
 		CCF70330DF1E2184F3691C68 /* Pods_ClientApplication.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D6A83CD8977DAFD1AA698446 /* Pods_ClientApplication.framework */; };
 /* End PBXBuildFile section */
 
@@ -31,6 +33,8 @@
 		1971266B24618C0D00A6E326 /* SplitViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplitViewController.swift; sourceTree = "<group>"; };
 		1971266D24618EE600A6E326 /* ImageCropper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCropper.swift; sourceTree = "<group>"; };
 		197126712461B08F00A6E326 /* SquareImageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SquareImageCell.swift; sourceTree = "<group>"; };
+		197126752461C46B00A6E326 /* SlicesCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SlicesCell.swift; sourceTree = "<group>"; };
+		1971267824621C2400A6E326 /* ImageSaveOperation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageSaveOperation.swift; sourceTree = "<group>"; };
 		44A2F79BC913E7853F773070 /* Pods-ClientApplication.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ClientApplication.release.xcconfig"; path = "Target Support Files/Pods-ClientApplication/Pods-ClientApplication.release.xcconfig"; sourceTree = "<group>"; };
 		994FA49AD43481F61D553F96 /* Pods-ClientApplication.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ClientApplication.debug.xcconfig"; path = "Target Support Files/Pods-ClientApplication/Pods-ClientApplication.debug.xcconfig"; sourceTree = "<group>"; };
 		D6A83CD8977DAFD1AA698446 /* Pods_ClientApplication.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ClientApplication.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -70,14 +74,14 @@
 			isa = PBXGroup;
 			children = (
 				1971265524618A3A00A6E326 /* AppDelegate.swift */,
-				1971265924618A3A00A6E326 /* ViewController.swift */,
+				197126772461C55A00A6E326 /* HomeScreenView */,
+				197126732461B8A900A6E326 /* GlueViews */,
+				1971267A24621FD000A6E326 /* ImageHelper */,
 				1971265B24618A3A00A6E326 /* Main.storyboard */,
 				1971265E24618A4100A6E326 /* Assets.xcassets */,
 				1971266024618A4100A6E326 /* LaunchScreen.storyboard */,
 				1971266324618A4100A6E326 /* Info.plist */,
-				197126732461B8A900A6E326 /* GlueViews */,
-				197126742461B8BF00A6E326 /* SplitViews */,
-				1971266D24618EE600A6E326 /* ImageCropper.swift */,
+				197126742461B8BF00A6E326 /* Drafts */,
 			);
 			path = ClientApplication;
 			sourceTree = "<group>";
@@ -91,12 +95,30 @@
 			path = GlueViews;
 			sourceTree = "<group>";
 		};
-		197126742461B8BF00A6E326 /* SplitViews */ = {
+		197126742461B8BF00A6E326 /* Drafts */ = {
 			isa = PBXGroup;
 			children = (
 				1971266B24618C0D00A6E326 /* SplitViewController.swift */,
 			);
-			path = SplitViews;
+			path = Drafts;
+			sourceTree = "<group>";
+		};
+		197126772461C55A00A6E326 /* HomeScreenView */ = {
+			isa = PBXGroup;
+			children = (
+				1971265924618A3A00A6E326 /* ViewController.swift */,
+				197126752461C46B00A6E326 /* SlicesCell.swift */,
+			);
+			path = HomeScreenView;
+			sourceTree = "<group>";
+		};
+		1971267A24621FD000A6E326 /* ImageHelper */ = {
+			isa = PBXGroup;
+			children = (
+				1971266D24618EE600A6E326 /* ImageCropper.swift */,
+				1971267824621C2400A6E326 /* ImageSaveOperation.swift */,
+			);
+			path = ImageHelper;
 			sourceTree = "<group>";
 		};
 		EA60A73F5E3AD2A724C897A0 /* Pods */ = {
@@ -234,9 +256,11 @@
 				1971266C24618C0D00A6E326 /* SplitViewController.swift in Sources */,
 				1971265A24618A3A00A6E326 /* ViewController.swift in Sources */,
 				197126722461B08F00A6E326 /* SquareImageCell.swift in Sources */,
+				197126762461C46B00A6E326 /* SlicesCell.swift in Sources */,
 				1971265624618A3A00A6E326 /* AppDelegate.swift in Sources */,
 				1971266A24618BA700A6E326 /* GlueViewController.swift in Sources */,
 				1971266E24618EE600A6E326 /* ImageCropper.swift in Sources */,
+				1971267924621C2400A6E326 /* ImageSaveOperation.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
