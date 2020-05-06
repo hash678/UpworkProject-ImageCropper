@@ -9,14 +9,21 @@
 import UIKit
 import Photos
 import BSImagePicker
+import JGProgressHUD
 
 class GlueViewController: UIViewController {
     
+    fileprivate lazy var progressHUD:JGProgressHUD = {
+        let hud = JGProgressHUD(style: .light)
+        hud.textLabel.text = "Please wait.."
+        hud.indicatorView = JGProgressHUDRingIndicatorView()
+        return hud
+    }()
     
-    
+    fileprivate var selectedCell:SquareImageCell?
     
     fileprivate let cellID = "MySquareCell"
-    fileprivate let dragAnimationDuration:Double = 0.5
+    fileprivate let dragAnimationDuration:Double = 0.2
     
     
     var splitCount = 4
@@ -30,6 +37,7 @@ class GlueViewController: UIViewController {
         super.viewDidLoad()
         setupViews()
         openImagePicker()
+        
     }
     
     fileprivate func setupViews(){
@@ -50,11 +58,15 @@ class GlueViewController: UIViewController {
         imagePicker.settings.selection.max = splitCount
         imagePicker.settings.selection.min = splitCount
         
-        presentImagePicker(imagePicker, animated: true, select: nil, deselect: nil, cancel: nil, finish: { (assets) in
+        presentImagePicker(imagePicker, animated: true, select: nil, deselect: nil, cancel: {(assets) in
+            //self.dismiss(animated: true, completion: nil)
+            self.navigationController?.popViewController(animated: true)
+            
+        }, finish: { (assets) in
             
             self.imagesDatasource = assets.sorted(by: { (a, b) -> Bool in
                 
-
+                
                 return (a.creationDate ?? Date()).timeIntervalSince1970 < (b.creationDate  ?? Date()).timeIntervalSince1970
             })
             
@@ -63,15 +75,25 @@ class GlueViewController: UIViewController {
             
         }, completion: nil)
         
-        
+//                if !PermissionHelper.checkPermissions(){
+//                    present(PermissionHelper.showAlert({
+//                        self.navigationController?.popViewController(animated: true)
+//                    }), animated: true, completion: nil)
+//                }
     }
     
     @objc fileprivate func glueImages(){
-        
-        ImageCropper.shared.stitchImage(images: imagesDatasource, completion: {[weak self] (image) in
+        progressHUD.show(in: self.view)
+        updateSelectedCell(nil)
+        ImageCropper.shared.stitchImage(images: imagesDatasource, progress: {[weak self]  (progress) in
+            
+            self?.progressHUD.progress = Float(progress)
+            
+        }, completion: {[weak self] (image) in
+            self?.progressHUD.dismiss(animated: true)
+            
             if let image = image{
                 self?.shareImage(image: image)
-                
             }else{
                 //TODO:Show error
             }
@@ -80,12 +102,12 @@ class GlueViewController: UIViewController {
     }
     fileprivate func shareImage(image:UIImage){
         
-      
+        
         let activityViewController = UIActivityViewController(activityItems: [image], applicationActivities: nil)
         activityViewController.popoverPresentationController?.sourceView=self.view
-                       present(activityViewController, animated: true, completion: nil)
+        present(activityViewController, animated: true, completion: nil)
         
-
+        
     }
     
     
@@ -107,6 +129,7 @@ extension GlueViewController:UICollectionViewDelegate,UICollectionViewDataSource
         cell.cellID = indexPath.row
         cell.addGestureRecognizer(gesture)
         cell.setImage(asset: imagesDatasource[indexPath.row])
+        cell.selected(false)
         if !myCells.contains(cell){
             myCells.append(cell)
         }
@@ -118,19 +141,27 @@ extension GlueViewController:UICollectionViewDelegate,UICollectionViewDataSource
         let image = imagesDatasource[indexPath.row]
         
         let height = min(getScaledHeight(scaledWidth: width, actualWidth: CGFloat(image.pixelWidth), actualHeight: CGFloat(image.pixelHeight)),(collectionView.frame.height / columnCount))
-      
+        
         return CGSize(width: width, height: height)
+    }
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellID, for: indexPath) as! SquareImageCell
+        
+        updateSelectedCell(cell)
+        
+        // }
     }
     
     
+    
     fileprivate func getScaledHeight(scaledWidth:CGFloat,actualWidth:CGFloat, actualHeight:CGFloat) -> CGFloat{
-           let factor = actualWidth / scaledWidth
-           return actualHeight / factor
-       }
+        let factor = actualWidth / scaledWidth
+        return actualHeight / factor
+    }
     
 }
 extension GlueViewController{
-   
+    
     
     /// Find view currently being hovered over
     /// - Parameters:
@@ -154,15 +185,17 @@ extension GlueViewController{
         let translation = sender.translation(in: self.view)
         guard let currentView = sender.view  else{return}
         
-        //Preserve initial location of view before dragging.
+        //Preserve initial location of view before dragging and update cell view to show border
         if sender.state == .began && originalLocations[currentView] == nil{
             originalLocations[currentView]  =  currentView.center
+            let cell = currentView as! SquareImageCell
+            updateSelectedCell(cell)
         }
         
         
         mainCollectionView.bringSubviewToFront(currentView)
         currentView.center = CGPoint(x: currentView.center.x + translation.x,
-                                    y: currentView.center.y + translation.y)
+                                     y: currentView.center.y + translation.y)
         sender.setTranslation(CGPoint(x: 0, y: 0), in: currentView)
         
         
@@ -171,10 +204,10 @@ extension GlueViewController{
         //Switch views and update the image array.
         if sender.state == .ended{
             let currentViewLocation = CGPoint(x: currentView.center.x,
-                                      y: currentView.center.y)
+                                              y: currentView.center.y)
             
             guard let moveTo = self.overlappingView(location: currentViewLocation, currentView: currentView) else{
-               
+                
                 UIView.animate(withDuration: dragAnimationDuration) {
                     currentView.center = self.originalLocations[sender.view!]!
                 }
@@ -185,7 +218,7 @@ extension GlueViewController{
             
             
             swapImages(firstView: currentView, secondView: moveTo)
-           
+            
             UIView.animate(withDuration: dragAnimationDuration) {
                 
                 
@@ -195,7 +228,7 @@ extension GlueViewController{
                 
                 self.originalLocations[currentView] = currentView.center
                 self.originalLocations[moveTo] = moveTo.center
-           
+                
             }
             
         }
@@ -210,27 +243,41 @@ extension GlueViewController{
     ///   - firstView: The first collectionview cell user swapped
     ///   - secondView: The second collectionview cell user swapper
     fileprivate func swapImages(firstView:UIView, secondView:UIView){
-          let cellA = firstView as! SquareImageCell
-                     let cellB = secondView as! SquareImageCell
+        let cellA = firstView as! SquareImageCell
+        let cellB = secondView as! SquareImageCell
         
-        //cellA.imageView.alpha = 0.8
-        //cellB.imageView.alpha = 0.8
-                     swapPlaces(indexA: cellA.cellID, indexB: cellB.cellID, array: &self.imagesDatasource)
-                     
+        swapPlaces(indexA: cellA.cellID, indexB: cellB.cellID, array: &self.imagesDatasource)
+        
+        //Update the indexs stored in each cell
         let temp = cellA.cellID
         cellA.cellID = cellB.cellID
         cellB.cellID = temp
-      }
+        
+        //Update cell border to show new highlighted image
+        updateSelectedCell(cellA)
+        
+    }
+    
+    fileprivate func updateSelectedCell(_ newSelected:SquareImageCell?){
+        selectedCell?.selected(false)
+        newSelected?.selected(true)
+        selectedCell = newSelected
+        if newSelected != nil{
+            mainCollectionView.bringSubviewToFront(newSelected!)
+            
+        }
+        
+    }
     
     
-       fileprivate func swapPlaces(indexA:Int,indexB:Int, array:inout [PHAsset]){
-           let temp = array[indexA]
-           array[indexA] = array[indexB]
-           array[indexB] = temp
-       }
-       
+    fileprivate func swapPlaces(indexA:Int,indexB:Int, array:inout [PHAsset]){
+        let temp = array[indexA]
+        array[indexA] = array[indexB]
+        array[indexB] = temp
+    }
     
-  
+    
+    
     
 }
 

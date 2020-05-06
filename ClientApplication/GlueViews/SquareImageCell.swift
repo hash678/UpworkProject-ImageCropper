@@ -22,14 +22,15 @@ class SquareImageCell:UICollectionViewCell{
             }
         
     }
+    
+        func selected(_ selected:Bool){
+          
+        
+            self.imageView.layer.borderWidth = selected ? 2 : 1
+            self.imageView.layer.borderColor = selected ? UIColor.blue.cgColor : UIColor.white.cgColor
+        self.imageView.layer.masksToBounds = true
+
+       }
   
 }
 
-extension UIColor {
-    static var random: UIColor {
-        return UIColor(red: .random(in: 0...1),
-                       green: .random(in: 0...1),
-                       blue: .random(in: 0...1),
-                       alpha: 1.0)
-    }
-}

@@ -178,3 +178,13 @@ extension UIImage{
 }
 
 
+
+extension UIView{
+    func addOnTapAnimation(completion:((Bool) -> Void)? = nil){
+           self.alpha = 0.25
+           UIView.animate(withDuration: 0.5, animations: {
+               self.alpha = 1
+           }, completion: completion)
+       
+       }
+}

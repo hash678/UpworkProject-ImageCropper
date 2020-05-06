@@ -10,6 +10,8 @@ import Foundation
 import UIKit
 import Photos
 
+
+
 class ImageCropper:NSObject {
 
     static let shared = ImageCropper()
@@ -26,7 +28,7 @@ extension ImageCropper{
     /// - Parameters:
     ///   - image: The UIImage that needs to be cropped
     ///   - imageCount: Total number of slices to be cropped into. Needs to be a perfect square number eg 4,9,16
-    func cropImage(image orientedImage:UIImage, splitInto imageCount:Int, completion:@escaping (Bool) -> Void){
+    func cropImage(image orientedImage:UIImage, splitInto imageCount:Int,progress:@escaping(Double)->Void, completion:@escaping (Bool) -> Void){
         
         
        
@@ -63,7 +65,6 @@ extension ImageCropper{
                   
                 
                 currentXPos += CGFloat(pieceWidth)
-                print("Hello")
                 
                
               }
@@ -71,33 +72,46 @@ extension ImageCropper{
             currentYPos += CGFloat(pieceHeight)
           }
 
-        saveAllCroppedImages(images: croppedImages,completion: completion)
+        saveAllCroppedImages(images: croppedImages,progress: progress,completion: completion)
     }
     
     
     /// Save UIImages in an ordered manner using a Queue
     /// - Parameter images: An array of UIImage
-    fileprivate func saveAllCroppedImages(images:[UIImage], completion:@escaping (Bool) -> Void){
+    fileprivate func saveAllCroppedImages(images:[UIImage],progress:@escaping (Double)->Void ,completion:@escaping (Bool) -> Void){
         let queue = OperationQueue()
         queue.name = Bundle.main.bundleIdentifier! + ".imagesave"
         queue.maxConcurrentOperationCount = 1
 
+        var failed = false
+        var count = 0
         let operations = images.map {
             return ImageSaveOperation(image: $0) { error in
+                
                 if let error = error {
+                    failed = true
+                    
                     print(error.localizedDescription)
+                    
                     queue.cancelAllOperations()
+                    return
                 }
+                count += 1
+                progress(Double(count)/Double(images.count))
             }
         }
 
+      
         let completion = BlockOperation {
-            completion(true)
+            completion(!failed)
         }
         operations.forEach { completion.addDependency($0) }
 
         queue.addOperations(operations, waitUntilFinished: false)
+        //progress(queue.progress.fractionCompleted)
+        
         OperationQueue.main.addOperation(completion)
+        //operations.
         
         
     }
@@ -108,26 +122,13 @@ extension ImageCropper{
       
       private func cropSlice(image:UIImage, cropArea:CGRect) -> UIImage?{
           guard let cgImage = image.cgImage?.cropping(to: cropArea) else{
-            print("Invalid area \(image.size) | \(cropArea)")
+          //  print("Invalid area \(image.size) | \(cropArea)")
             return nil}
-        print("Valid area \(image.size) | \(cropArea)")
+       // print("Valid area \(image.size) | \(cropArea)")
         return UIImage(cgImage: cgImage)
         
       }
-//
-//      private func saveImage(image:UIImage){
-//            UIImageWriteToSavedPhotosAlbum(image, self, #selector(self.image(image:didFinishSavingWithError:contextInfo:)), nil)
-//        }
-//
-//    @objc fileprivate func image(image: UIImage, didFinishSavingWithError error: NSError?, contextInfo:UnsafeRawPointer) {
-//        print("Called")
-//        guard error == nil else {
-//
-//        print("Error saving")
-//           return
-//        }
-//
-//     }
+
     
 }
 
@@ -136,7 +137,7 @@ extension ImageCropper{
 extension ImageCropper{
 
     
-    func stitchImage(images:[PHAsset], completion:(UIImage?) -> Void){
+    func stitchImage(images:[PHAsset],progress:(Double) -> Void, completion:(UIImage?) -> Void){
         
         //Number of rows/columns
         let rowColumnCount = sqrt(CGFloat(images.count))
@@ -179,13 +180,15 @@ extension ImageCropper{
                 
                 //Updates max height of row if needed.
                 maxHeight = maxHeight < currentImageHeight ? currentImageHeight : maxHeight
-                print(currentImageRect)
+               // print(currentImageRect)
                 
                 //Draw PHAsset on canvas.
                 if !drawPHAsset(asset: currentImage, inRect: currentImageRect){
                     completion(nil)
                     return
                 }
+                //Update progress
+                progress(Double(index)/Double(images.count))
                 
             
                 currentXPos += currentImageWidth

@@ -8,10 +8,21 @@
 
 import UIKit
 import Photos
+import JGProgressHUD
 
 class ViewController: UIViewController {
     let slices = [4,9,16]
     var splitCount = 4
+    
+    
+    fileprivate lazy var progressHUD:JGProgressHUD = {
+         let hud = JGProgressHUD(style: .light)
+         hud.textLabel.text = "Please wait.."
+         
+         hud.indicatorView = JGProgressHUDRingIndicatorView()
+       
+         return hud
+     }()
     
     fileprivate let imagePicker = UIImagePickerController()
     
@@ -23,13 +34,20 @@ class ViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+       
+//        if !PermissionHelper.checkPermissions(){
+//            present(PermissionHelper.showAlert(nil), animated: true, completion: nil)
+//        }
+        
         splitCount = UserDefaults.standard.integer(forKey: "splitCount")
+        splitCount = splitCount == 0 ? 4 : splitCount
         slicesCollectionView.selectItem(at: IndexPath(row: slices.firstIndex(of: splitCount) ?? 0, section: 0), animated: true, scrollPosition: .left)
         
         
         glueImageButton.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(glueImages)))
         splitImageButton.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(splitImages)))
 
+        
     }
 
     @objc fileprivate func glueImages(){
@@ -43,6 +61,7 @@ class ViewController: UIViewController {
     }
     
     @objc fileprivate func splitImages(){
+        
         splitImageButton.addOnTapAnimation { (_) in
             self.openImagePicker()
         }
@@ -80,6 +99,7 @@ extension ViewController:UICollectionViewDelegate,UICollectionViewDataSource{
 extension ViewController:UIImagePickerControllerDelegate,UINavigationControllerDelegate{
     
     fileprivate func openImagePicker(){
+        
     imagePicker.delegate = self
                imagePicker.sourceType = .photoLibrary
                present(imagePicker, animated: true, completion: nil)
@@ -87,23 +107,45 @@ extension ViewController:UIImagePickerControllerDelegate,UINavigationControllerD
     
     
     internal func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+       
         dismiss(animated: true, completion: nil)
         if let pickedImage = info[UIImagePickerController.InfoKey.originalImage] as? UIImage {
             cropImage(image:pickedImage)
+            
         }
      
     }
     
-    private func checkPermissions(){
-        let status = PHPhotoLibrary.authorizationStatus()
-        
-        
+    
+    func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
+        dismiss(animated: true, completion: nil)
+    }
+   
+    private func openInstructionsController(){
+        let instructionsController = self.storyboard?.instantiateViewController(withIdentifier: "instructionsController") as! InstructionsViewController
+        instructionsController.splitCount = self.splitCount
+        self.navigationController?.pushViewController(instructionsController, animated: true)
     }
     
-    
    private func cropImage(image:UIImage) {
-        ImageCropper.shared.cropImage(image: image, splitInto: splitCount, completion: {(done) in
-            print("\(done)")
+    progressHUD.show(in: view)
+
+    ImageCropper.shared.cropImage(image: image, splitInto: splitCount, progress: {[weak self]  (progress) in
+        
+        self?.progressHUD.progress = Float(progress)
+
+        
+    }, completion: {[weak self] (done) in
+        self?.progressHUD.dismiss(animated: true)
+            if !done{
+                //print("Problem")
+                if !PermissionHelper.checkPermissions(){
+                    self?.present(PermissionHelper.showAlert(nil), animated: true, completion: nil)
+                      }
+                      
+            }else{
+                self?.openInstructionsController()
+            }
         })
 
       }
@@ -111,13 +153,3 @@ extension ViewController:UIImagePickerControllerDelegate,UINavigationControllerD
 
 
 
-
-extension UIView{
-    func addOnTapAnimation(completion:((Bool) -> Void)? = nil){
-           self.alpha = 0.25
-           UIView.animate(withDuration: 0.5, animations: {
-               self.alpha = 1
-           }, completion: completion)
-       
-       }
-}

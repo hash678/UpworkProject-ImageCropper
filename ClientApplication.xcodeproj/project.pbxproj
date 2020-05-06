@@ -17,7 +17,9 @@
 		1971266E24618EE600A6E326 /* ImageCropper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1971266D24618EE600A6E326 /* ImageCropper.swift */; };
 		197126722461B08F00A6E326 /* SquareImageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 197126712461B08F00A6E326 /* SquareImageCell.swift */; };
 		197126762461C46B00A6E326 /* SlicesCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 197126752461C46B00A6E326 /* SlicesCell.swift */; };
-		1971267924621C2400A6E326 /* ImageHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1971267824621C2400A6E326 /* ImageHelper.swift */; };
+		1971267924621C2400A6E326 /* Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1971267824621C2400A6E326 /* Utils.swift */; };
+		1971267F24626A4800A6E326 /* PermissionHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1971267E24626A4800A6E326 /* PermissionHelper.swift */; };
+		1971268124626E0D00A6E326 /* InstructionsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1971268024626E0D00A6E326 /* InstructionsViewController.swift */; };
 		CCF70330DF1E2184F3691C68 /* Pods_ClientApplication.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D6A83CD8977DAFD1AA698446 /* Pods_ClientApplication.framework */; };
 /* End PBXBuildFile section */
 
@@ -34,7 +36,9 @@
 		1971266D24618EE600A6E326 /* ImageCropper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCropper.swift; sourceTree = "<group>"; };
 		197126712461B08F00A6E326 /* SquareImageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SquareImageCell.swift; sourceTree = "<group>"; };
 		197126752461C46B00A6E326 /* SlicesCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SlicesCell.swift; sourceTree = "<group>"; };
-		1971267824621C2400A6E326 /* ImageHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageHelper.swift; sourceTree = "<group>"; };
+		1971267824621C2400A6E326 /* Utils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Utils.swift; sourceTree = "<group>"; };
+		1971267E24626A4800A6E326 /* PermissionHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PermissionHelper.swift; sourceTree = "<group>"; };
+		1971268024626E0D00A6E326 /* InstructionsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InstructionsViewController.swift; sourceTree = "<group>"; };
 		44A2F79BC913E7853F773070 /* Pods-ClientApplication.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ClientApplication.release.xcconfig"; path = "Target Support Files/Pods-ClientApplication/Pods-ClientApplication.release.xcconfig"; sourceTree = "<group>"; };
 		994FA49AD43481F61D553F96 /* Pods-ClientApplication.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ClientApplication.debug.xcconfig"; path = "Target Support Files/Pods-ClientApplication/Pods-ClientApplication.debug.xcconfig"; sourceTree = "<group>"; };
 		D6A83CD8977DAFD1AA698446 /* Pods_ClientApplication.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ClientApplication.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -77,11 +81,13 @@
 				197126772461C55A00A6E326 /* HomeScreenView */,
 				197126732461B8A900A6E326 /* GlueViews */,
 				1971267A24621FD000A6E326 /* Image */,
+				1971267824621C2400A6E326 /* Utils.swift */,
 				1971265B24618A3A00A6E326 /* Main.storyboard */,
 				1971265E24618A4100A6E326 /* Assets.xcassets */,
 				1971266024618A4100A6E326 /* LaunchScreen.storyboard */,
 				1971266324618A4100A6E326 /* Info.plist */,
 				197126742461B8BF00A6E326 /* Drafts */,
+				1971267E24626A4800A6E326 /* PermissionHelper.swift */,
 			);
 			path = ClientApplication;
 			sourceTree = "<group>";
@@ -108,6 +114,7 @@
 			children = (
 				1971265924618A3A00A6E326 /* ViewController.swift */,
 				197126752461C46B00A6E326 /* SlicesCell.swift */,
+				1971268024626E0D00A6E326 /* InstructionsViewController.swift */,
 			);
 			path = HomeScreenView;
 			sourceTree = "<group>";
@@ -116,7 +123,6 @@
 			isa = PBXGroup;
 			children = (
 				1971266D24618EE600A6E326 /* ImageCropper.swift */,
-				1971267824621C2400A6E326 /* ImageHelper.swift */,
 			);
 			path = Image;
 			sourceTree = "<group>";
@@ -255,12 +261,14 @@
 			files = (
 				1971266C24618C0D00A6E326 /* SplitViewController.swift in Sources */,
 				1971265A24618A3A00A6E326 /* ViewController.swift in Sources */,
+				1971267F24626A4800A6E326 /* PermissionHelper.swift in Sources */,
 				197126722461B08F00A6E326 /* SquareImageCell.swift in Sources */,
 				197126762461C46B00A6E326 /* SlicesCell.swift in Sources */,
 				1971265624618A3A00A6E326 /* AppDelegate.swift in Sources */,
 				1971266A24618BA700A6E326 /* GlueViewController.swift in Sources */,
 				1971266E24618EE600A6E326 /* ImageCropper.swift in Sources */,
-				1971267924621C2400A6E326 /* ImageHelper.swift in Sources */,
+				1971267924621C2400A6E326 /* Utils.swift in Sources */,
+				1971268124626E0D00A6E326 /* InstructionsViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
