@@ -13,7 +13,6 @@ import Photos
 class ImageCropper:NSObject {
 
     static let shared = ImageCropper()
-    let semaphore = DispatchSemaphore(value: 0)
 
     private override init(){}
 
@@ -27,7 +26,7 @@ extension ImageCropper{
     /// - Parameters:
     ///   - image: The UIImage that needs to be cropped
     ///   - imageCount: Total number of slices to be cropped into. Needs to be a perfect square number eg 4,9,16
-      func cropImage(image orientedImage:UIImage, splitInto imageCount:Int){
+    func cropImage(image orientedImage:UIImage, splitInto imageCount:Int, completion:@escaping (Bool) -> Void){
         
         
        
@@ -41,8 +40,7 @@ extension ImageCropper{
        guard let cgImage = image.cgImage else{return}
       
      
-        //print(image.imageOrientation.rawValue)
-        let imageWidth = cgImage.width
+          let imageWidth = cgImage.width
           let imageHeight = cgImage.height
         
           
@@ -58,7 +56,7 @@ extension ImageCropper{
                 
                 
 
-                if let image = self.cropImage(image: image, cropArea: CGRect(x: currentXPos, y: currentYPos , width: CGFloat(pieceWidth), height: CGFloat(pieceHeight))){
+                if let image = self.cropSlice(image: image, cropArea: CGRect(x: currentXPos, y: currentYPos , width: CGFloat(pieceWidth), height: CGFloat(pieceHeight))){
                     croppedImages.append(image)
                 }
 
@@ -73,10 +71,13 @@ extension ImageCropper{
             currentYPos += CGFloat(pieceHeight)
           }
 
-        saveAllCroppedImages(images: croppedImages)
+        saveAllCroppedImages(images: croppedImages,completion: completion)
     }
     
-    fileprivate func saveAllCroppedImages(images:[UIImage]){
+    
+    /// Save UIImages in an ordered manner using a Queue
+    /// - Parameter images: An array of UIImage
+    fileprivate func saveAllCroppedImages(images:[UIImage], completion:@escaping (Bool) -> Void){
         let queue = OperationQueue()
         queue.name = Bundle.main.bundleIdentifier! + ".imagesave"
         queue.maxConcurrentOperationCount = 1
@@ -91,7 +92,7 @@ extension ImageCropper{
         }
 
         let completion = BlockOperation {
-            print("all done")
+            completion(true)
         }
         operations.forEach { completion.addDependency($0) }
 
@@ -105,36 +106,28 @@ extension ImageCropper{
       
       
       
-      private func cropImage(image:UIImage, cropArea:CGRect) -> UIImage?{
+      private func cropSlice(image:UIImage, cropArea:CGRect) -> UIImage?{
           guard let cgImage = image.cgImage?.cropping(to: cropArea) else{
             print("Invalid area \(image.size) | \(cropArea)")
             return nil}
         print("Valid area \(image.size) | \(cropArea)")
-
-       
-             return UIImage(cgImage: cgImage)
-    
+        return UIImage(cgImage: cgImage)
         
       }
-      
-      private func saveImage(image:UIImage){
-       
-        DispatchQueue.global().async { [unowned self] in
-            UIImageWriteToSavedPhotosAlbum(image, self, #selector(self.image(image:didFinishSavingWithError:contextInfo:)), nil)
-            self.semaphore.wait()
-        }
-        }
-      
-    @objc fileprivate func image(image: UIImage, didFinishSavingWithError error: NSError?, contextInfo:UnsafeRawPointer) {
-        print("Called")
-        guard error == nil else {
-
-        print("Error saving")
-           return
-        }
-     // semaphore.signal()
-        //Image saved successfully
-     }
+//
+//      private func saveImage(image:UIImage){
+//            UIImageWriteToSavedPhotosAlbum(image, self, #selector(self.image(image:didFinishSavingWithError:contextInfo:)), nil)
+//        }
+//
+//    @objc fileprivate func image(image: UIImage, didFinishSavingWithError error: NSError?, contextInfo:UnsafeRawPointer) {
+//        print("Called")
+//        guard error == nil else {
+//
+//        print("Error saving")
+//           return
+//        }
+//
+//     }
     
 }
 
@@ -143,7 +136,7 @@ extension ImageCropper{
 extension ImageCropper{
 
     
-    func stitchImage(images:[PHAsset]){
+    func stitchImage(images:[PHAsset], completion:(UIImage?) -> Void){
         
         //Number of rows/columns
         let rowColumnCount = sqrt(CGFloat(images.count))
@@ -154,7 +147,6 @@ extension ImageCropper{
         let finalImageHeight = CGFloat(images.first!.pixelHeight) * rowColumnCount
         let finalImageSize = CGSize(width: finalImageWidth, height: finalImageHeight)
         
-        print("FinalImageSize \(finalImageSize)")
 
         //Create Canvas for output image
        // UIGraphicsBeginImageContextWithOptions(finalImageSize, false, 0)
@@ -190,7 +182,10 @@ extension ImageCropper{
                 print(currentImageRect)
                 
                 //Draw PHAsset on canvas.
-                drawPHAsset(asset: currentImage, inRect: currentImageRect)
+                if !drawPHAsset(asset: currentImage, inRect: currentImageRect){
+                    completion(nil)
+                    return
+                }
                 
             
                 currentXPos += currentImageWidth
@@ -201,109 +196,35 @@ extension ImageCropper{
         
         let outputImage:UIImage = UIGraphicsGetImageFromCurrentImageContext()!
         UIGraphicsEndImageContext()
-        saveImage(image: outputImage)
+        completion(outputImage)
+       // saveImage(image: outputImage)
     }
     
     
-    fileprivate func drawPHAsset(asset currentImage:PHAsset, inRect currentImageRect:CGRect){
+    fileprivate func drawPHAsset(asset currentImage:PHAsset, inRect currentImageRect:CGRect) -> Bool{
         
 
         var uiImage:UIImage?
         
         let manager = PHImageManager.default()
-        let options =  PHImageRequestOptions.init()
+        let options = PHImageRequestOptions.init()
         options.deliveryMode = .highQualityFormat
         options.isSynchronous = true
 
         manager.requestImage(for: currentImage, targetSize: PHImageManagerMaximumSize, contentMode: .default, options: options) { (image, info) in
             uiImage = image
-           // print("Got image \(image?.size)")
 
         }
-        
-        
-        
         if uiImage == nil{
-            print("Null")
-            return}
+           return false
+        }
         uiImage!.draw(in: currentImageRect, blendMode: .normal, alpha: 1)
-        
+        return true
     }
     
 }
 
 
 
-
-
-extension UIImage{
-        func fixOrientation() -> UIImage {
-
-            guard let cgImage = cgImage else { return self }
-
-            if imageOrientation == .up { return self }
-
-            var transform = CGAffineTransform.identity
-
-            //let size = CGSize(width: cgImage.width, height: cgImage.height)
-            switch imageOrientation {
-
-            case .down, .downMirrored:
-                transform = transform.translatedBy(x: size.width, y: size.height)
-                transform = transform.rotated(by: CGFloat(Double.pi))
-
-            case .left, .leftMirrored:
-                transform = transform.translatedBy(x: size.width, y: 0)
-                transform = transform.rotated(by: CGFloat(Double.pi/2))
-
-            case .right, .rightMirrored:
-                transform = transform.translatedBy(x: 0, y: size.height)
-                transform = transform.rotated(by: CGFloat(-Double.pi/2))
-
-            case .up, .upMirrored:
-                break
-            @unknown default:
-                break
-            }
-
-            switch imageOrientation {
-
-            case .upMirrored, .downMirrored:
-                transform.translatedBy(x: size.width, y: 0)
-                //transform.scaledBy(x: -1, y: 1)
-
-            case .leftMirrored, .rightMirrored:
-                transform.translatedBy(x: size.height, y: 0)
-                //transform.scaledBy(x: -1, y: 1)
-
-            case .up, .down, .left, .right:
-                break
-            @unknown default:
-                break
-            }
-
-            if let ctx = CGContext(data: nil, width: Int(size.width), height: Int(size.height), bitsPerComponent: cgImage.bitsPerComponent, bytesPerRow: 0, space: cgImage.colorSpace!, bitmapInfo: CGImageAlphaInfo.premultipliedLast.rawValue) {
-
-                ctx.concatenate(transform)
-
-                switch imageOrientation {
-
-                case .left, .leftMirrored, .right, .rightMirrored:
-                    ctx.draw(cgImage, in: CGRect(x: 0, y: 0, width: size.height, height: size.width))
-
-                default:
-                    ctx.draw(cgImage, in: CGRect(x: 0, y: 0, width: size.width, height: size.height))
-                }
-
-                if let finalImage = ctx.makeImage() {
-                    return (UIImage(cgImage: finalImage))
-                }
-            }
-
-            // something failed -- return original
-            return self
-        }
-    
-}
 
 

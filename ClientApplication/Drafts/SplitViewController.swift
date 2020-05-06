@@ -29,7 +29,7 @@ class SplitViewController:UIViewController{
     }
     
     @IBAction func cropImage(_ sender: Any) {
-        ImageCropper.shared.cropImage(image: image!, splitInto: 4)
+    //    ImageCropper.shared.cropImage(image: image!, splitInto: 4, completion: <#(Bool) -> Void#>)
 
     }
     
@@ -52,7 +52,7 @@ extension SplitViewController:UIImagePickerControllerDelegate,UINavigationContro
     }
     
     func cropImage(image:UIImage) {
-          ImageCropper.shared.cropImage(image: image, splitInto: splitCount)
+         // ImageCropper.shared.cropImage(image: image, splitInto: splitCount)
 
       }
 }

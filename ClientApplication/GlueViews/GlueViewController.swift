@@ -68,8 +68,24 @@ class GlueViewController: UIViewController {
     
     @objc fileprivate func glueImages(){
         
-        ImageCropper.shared.stitchImage(images: imagesDatasource)
+        ImageCropper.shared.stitchImage(images: imagesDatasource, completion: {[weak self] (image) in
+            if let image = image{
+                self?.shareImage(image: image)
+                
+            }else{
+                //TODO:Show error
+            }
+        })
         
+    }
+    fileprivate func shareImage(image:UIImage){
+        
+      
+        let activityViewController = UIActivityViewController(activityItems: [image], applicationActivities: nil)
+        activityViewController.popoverPresentationController?.sourceView=self.view
+                       present(activityViewController, animated: true, completion: nil)
+        
+
     }
     
     
@@ -99,8 +115,18 @@ extension GlueViewController:UICollectionViewDelegate,UICollectionViewDataSource
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         let columnCount = CGFloat(sqrt(Double(splitCount)))
         let width = (collectionView.frame.width / columnCount)
-        return CGSize(width: width, height: width)
+        let image = imagesDatasource[indexPath.row]
+        
+        let height = min(getScaledHeight(scaledWidth: width, actualWidth: CGFloat(image.pixelWidth), actualHeight: CGFloat(image.pixelHeight)),(collectionView.frame.height / columnCount))
+      
+        return CGSize(width: width, height: height)
     }
+    
+    
+    fileprivate func getScaledHeight(scaledWidth:CGFloat,actualWidth:CGFloat, actualHeight:CGFloat) -> CGFloat{
+           let factor = actualWidth / scaledWidth
+           return actualHeight / factor
+       }
     
 }
 extension GlueViewController{
@@ -207,5 +233,6 @@ extension GlueViewController{
   
     
 }
+
 
 

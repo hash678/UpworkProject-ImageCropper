@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Photos
 
 class ViewController: UIViewController {
     let slices = [4,9,16]
@@ -86,15 +87,24 @@ extension ViewController:UIImagePickerControllerDelegate,UINavigationControllerD
     
     
     internal func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+        dismiss(animated: true, completion: nil)
         if let pickedImage = info[UIImagePickerController.InfoKey.originalImage] as? UIImage {
             cropImage(image:pickedImage)
         }
      
-        dismiss(animated: true, completion: nil)
     }
     
-    func cropImage(image:UIImage) {
-          ImageCropper.shared.cropImage(image: image, splitInto: splitCount)
+    private func checkPermissions(){
+        let status = PHPhotoLibrary.authorizationStatus()
+        
+        
+    }
+    
+    
+   private func cropImage(image:UIImage) {
+        ImageCropper.shared.cropImage(image: image, splitInto: splitCount, completion: {(done) in
+            print("\(done)")
+        })
 
       }
 }
@@ -105,8 +115,8 @@ extension ViewController:UIImagePickerControllerDelegate,UINavigationControllerD
 extension UIView{
     func addOnTapAnimation(completion:((Bool) -> Void)? = nil){
            self.alpha = 0.25
-           UIView.animate(withDuration: 0.5, animations: { [weak self] in
-               self?.alpha = 1
+           UIView.animate(withDuration: 0.5, animations: {
+               self.alpha = 1
            }, completion: completion)
        
        }
