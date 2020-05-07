@@ -19,9 +19,9 @@ class InstructionsViewController:UIViewController{
     @IBAction func openGlueController(_ sender: Any) {
         let glueViewController = self.storyboard?.instantiateViewController(withIdentifier: "glueViewController") as! GlueViewController
                    glueViewController.splitCount = self.splitCount
-        
-        self.navigationController?.popViewController(animated: true)
-                   self.navigationController?.pushViewController(glueViewController, animated: true)
+
+        self.navigationController?.replaceTopViewController(with: glueViewController, animated: true)
+       
     }
     
     override func viewDidLoad() {

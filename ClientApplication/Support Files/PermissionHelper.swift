@@ -21,6 +21,11 @@ class PermissionHelper{
         }
         return false
     }
+    static func requestPermission(completion:@escaping (Bool) -> Void){
+        PHPhotoLibrary.requestAuthorization { (status) in
+            completion(status == .authorized)
+        }
+    }
     
     
     static func showAlert(_ cancelCompletion:(() -> Void)?) -> UIAlertController{

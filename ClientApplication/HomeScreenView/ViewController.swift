@@ -34,11 +34,6 @@ class ViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-       
-//        if !PermissionHelper.checkPermissions(){
-//            present(PermissionHelper.showAlert(nil), animated: true, completion: nil)
-//        }
-        
         splitCount = UserDefaults.standard.integer(forKey: "splitCount")
         splitCount = splitCount == 0 ? 4 : splitCount
         slicesCollectionView.selectItem(at: IndexPath(row: slices.firstIndex(of: splitCount) ?? 0, section: 0), animated: true, scrollPosition: .left)
@@ -138,10 +133,11 @@ extension ViewController:UIImagePickerControllerDelegate,UINavigationControllerD
     }, completion: {[weak self] (done) in
         self?.progressHUD.dismiss(animated: true)
             if !done{
-                //print("Problem")
                 if !PermissionHelper.checkPermissions(){
                     self?.present(PermissionHelper.showAlert(nil), animated: true, completion: nil)
-                      }
+                }else{
+                    self?.showError()
+                }
                       
             }else{
                 self?.openInstructionsController()
@@ -149,6 +145,12 @@ extension ViewController:UIImagePickerControllerDelegate,UINavigationControllerD
         })
 
       }
+    
+    fileprivate func showError(){
+        let alertController = UIAlertController (title: "An error occurred", message: "An unknown error occurred while splitting the image. ", preferredStyle: .alert)
+        alertController.addAction(UIAlertAction(title: "Okay", style: .default, handler: nil))
+        present(alertController, animated: true, completion: nil)
+    }
 }
 
 

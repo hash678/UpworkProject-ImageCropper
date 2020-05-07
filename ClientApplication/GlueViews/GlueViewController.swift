@@ -21,7 +21,6 @@ class GlueViewController: UIViewController {
     }()
     
     fileprivate var selectedCell:SquareImageCell?
-    
     fileprivate let cellID = "MySquareCell"
     fileprivate let dragAnimationDuration:Double = 0.2
     
@@ -36,7 +35,16 @@ class GlueViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setupViews()
-        openImagePicker()
+        
+        
+        PermissionHelper.requestPermission {[weak self] (granted) in
+            if granted{
+                self?.openImagePicker()
+            }else{
+                self?.present(PermissionHelper.showAlert(nil), animated: true, completion: nil)
+            }
+        }
+     
         
     }
     
@@ -47,12 +55,20 @@ class GlueViewController: UIViewController {
         flowLayout.minimumLineSpacing = 0
         mainCollectionView.collectionViewLayout = flowLayout
         
-        
-        
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Save", style: .done, target: self, action: #selector(glueImages))
     }
     
+    
+    fileprivate func showError(){
+        let alertController = UIAlertController (title: "An error occurred", message: "An unknown error occurred while putting the images together. ", preferredStyle: .alert)
+        alertController.addAction(UIAlertAction(title: "Okay", style: .default, handler: nil))
+
+        present(alertController, animated: true, completion: nil)
+    }
+    
     fileprivate func openImagePicker(){
+        
+        
         
         let imagePicker = ImagePickerController()
         imagePicker.settings.selection.max = splitCount
@@ -74,12 +90,7 @@ class GlueViewController: UIViewController {
             self.mainCollectionView.reloadData()
             
         }, completion: nil)
-        
-//                if !PermissionHelper.checkPermissions(){
-//                    present(PermissionHelper.showAlert({
-//                        self.navigationController?.popViewController(animated: true)
-//                    }), animated: true, completion: nil)
-//                }
+    
     }
     
     @objc fileprivate func glueImages(){
@@ -95,18 +106,18 @@ class GlueViewController: UIViewController {
             if let image = image{
                 self?.shareImage(image: image)
             }else{
-                //TODO:Show error
+                self?.showError()
             }
         })
         
     }
+    
     fileprivate func shareImage(image:UIImage){
         
         
         let activityViewController = UIActivityViewController(activityItems: [image], applicationActivities: nil)
         activityViewController.popoverPresentationController?.sourceView=self.view
         present(activityViewController, animated: true, completion: nil)
-        
         
     }
     
@@ -149,7 +160,6 @@ extension GlueViewController:UICollectionViewDelegate,UICollectionViewDataSource
         
         updateSelectedCell(cell)
         
-        // }
     }
     
     
@@ -185,7 +195,7 @@ extension GlueViewController{
         let translation = sender.translation(in: self.view)
         guard let currentView = sender.view  else{return}
         
-        //Preserve initial location of view before dragging and update cell view to show border
+        //Preserve initial location of view before dragging and update cell view to show border(if enabled)
         if sender.state == .began && originalLocations[currentView] == nil{
             originalLocations[currentView]  =  currentView.center
             let cell = currentView as! SquareImageCell
@@ -275,6 +285,8 @@ extension GlueViewController{
         array[indexA] = array[indexB]
         array[indexB] = temp
     }
+    
+    
     
     
     

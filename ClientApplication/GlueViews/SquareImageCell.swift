@@ -13,6 +13,12 @@ class SquareImageCell:UICollectionViewCell{
     
     var cellID:Int = -1
     
+    var enableBorders = true
+    var selectedColor:CGColor =  UIColor.blue.cgColor
+    var unSelectedColor:CGColor = UIColor.white.cgColor
+    var selectedBorderWidth:CGFloat = 2
+    var unSelectedBorderWidth:CGFloat = 1
+
 
     @IBOutlet weak var imageView: UIImageView!
     
@@ -24,11 +30,11 @@ class SquareImageCell:UICollectionViewCell{
     }
     
         func selected(_ selected:Bool){
-          
+            if !enableBorders{return}
         
-            self.imageView.layer.borderWidth = selected ? 2 : 1
-            self.imageView.layer.borderColor = selected ? UIColor.blue.cgColor : UIColor.white.cgColor
-        self.imageView.layer.masksToBounds = true
+            self.imageView.layer.borderWidth = selected ? selectedBorderWidth : unSelectedBorderWidth
+            self.imageView.layer.borderColor = selected ? selectedColor : unSelectedColor
+            self.imageView.layer.masksToBounds = true
 
        }
   

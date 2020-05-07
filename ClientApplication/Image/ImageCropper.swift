@@ -60,6 +60,9 @@ extension ImageCropper{
 
                 if let image = self.cropSlice(image: image, cropArea: CGRect(x: currentXPos, y: currentYPos , width: CGFloat(pieceWidth), height: CGFloat(pieceHeight))){
                     croppedImages.append(image)
+                }else{
+                    completion(false)
+                    return
                 }
 
                   
@@ -120,11 +123,10 @@ extension ImageCropper{
       
       
       
-      private func cropSlice(image:UIImage, cropArea:CGRect) -> UIImage?{
+      fileprivate func cropSlice(image:UIImage, cropArea:CGRect) -> UIImage?{
           guard let cgImage = image.cgImage?.cropping(to: cropArea) else{
-          //  print("Invalid area \(image.size) | \(cropArea)")
+            print("Unable to crop slice. Specified CGRect is invalid")
             return nil}
-       // print("Valid area \(image.size) | \(cropArea)")
         return UIImage(cgImage: cgImage)
         
       }
@@ -150,7 +152,6 @@ extension ImageCropper{
         
 
         //Create Canvas for output image
-       // UIGraphicsBeginImageContextWithOptions(finalImageSize, false, 0)
         UIGraphicsBeginImageContext(finalImageSize)
         
         //Maintains current y position while drawing on canvas
@@ -171,8 +172,8 @@ extension ImageCropper{
                 //Index of current image
                 let index = (i*Int(rowColumnCount)) + j
                 
+                //Current Slice data
                 let currentImage = images[index]
-                
                 let currentImageHeight = CGFloat(currentImage.pixelHeight)
                 let currentImageWidth = CGFloat(currentImage.pixelWidth)
                 let currentImageRect = CGRect(x: currentXPos, y: currentYPos, width: currentImageWidth, height: currentImageHeight)
@@ -200,7 +201,6 @@ extension ImageCropper{
         let outputImage:UIImage = UIGraphicsGetImageFromCurrentImageContext()!
         UIGraphicsEndImageContext()
         completion(outputImage)
-       // saveImage(image: outputImage)
     }
     
     

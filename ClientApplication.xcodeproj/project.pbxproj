@@ -13,7 +13,6 @@
 		1971265F24618A4100A6E326 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1971265E24618A4100A6E326 /* Assets.xcassets */; };
 		1971266224618A4100A6E326 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1971266024618A4100A6E326 /* LaunchScreen.storyboard */; };
 		1971266A24618BA700A6E326 /* GlueViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1971266924618BA700A6E326 /* GlueViewController.swift */; };
-		1971266C24618C0D00A6E326 /* SplitViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1971266B24618C0D00A6E326 /* SplitViewController.swift */; };
 		1971266E24618EE600A6E326 /* ImageCropper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1971266D24618EE600A6E326 /* ImageCropper.swift */; };
 		197126722461B08F00A6E326 /* SquareImageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 197126712461B08F00A6E326 /* SquareImageCell.swift */; };
 		197126762461C46B00A6E326 /* SlicesCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 197126752461C46B00A6E326 /* SlicesCell.swift */; };
@@ -32,7 +31,6 @@
 		1971266124618A4100A6E326 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		1971266324618A4100A6E326 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		1971266924618BA700A6E326 /* GlueViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlueViewController.swift; sourceTree = "<group>"; };
-		1971266B24618C0D00A6E326 /* SplitViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplitViewController.swift; sourceTree = "<group>"; };
 		1971266D24618EE600A6E326 /* ImageCropper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCropper.swift; sourceTree = "<group>"; };
 		197126712461B08F00A6E326 /* SquareImageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SquareImageCell.swift; sourceTree = "<group>"; };
 		197126752461C46B00A6E326 /* SlicesCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SlicesCell.swift; sourceTree = "<group>"; };
@@ -81,13 +79,11 @@
 				197126772461C55A00A6E326 /* HomeScreenView */,
 				197126732461B8A900A6E326 /* GlueViews */,
 				1971267A24621FD000A6E326 /* Image */,
-				1971267824621C2400A6E326 /* Utils.swift */,
+				197126A72464B16100A6E326 /* Support Files */,
 				1971265B24618A3A00A6E326 /* Main.storyboard */,
 				1971265E24618A4100A6E326 /* Assets.xcassets */,
 				1971266024618A4100A6E326 /* LaunchScreen.storyboard */,
 				1971266324618A4100A6E326 /* Info.plist */,
-				197126742461B8BF00A6E326 /* Drafts */,
-				1971267E24626A4800A6E326 /* PermissionHelper.swift */,
 			);
 			path = ClientApplication;
 			sourceTree = "<group>";
@@ -99,14 +95,6 @@
 				197126712461B08F00A6E326 /* SquareImageCell.swift */,
 			);
 			path = GlueViews;
-			sourceTree = "<group>";
-		};
-		197126742461B8BF00A6E326 /* Drafts */ = {
-			isa = PBXGroup;
-			children = (
-				1971266B24618C0D00A6E326 /* SplitViewController.swift */,
-			);
-			path = Drafts;
 			sourceTree = "<group>";
 		};
 		197126772461C55A00A6E326 /* HomeScreenView */ = {
@@ -125,6 +113,15 @@
 				1971266D24618EE600A6E326 /* ImageCropper.swift */,
 			);
 			path = Image;
+			sourceTree = "<group>";
+		};
+		197126A72464B16100A6E326 /* Support Files */ = {
+			isa = PBXGroup;
+			children = (
+				1971267824621C2400A6E326 /* Utils.swift */,
+				1971267E24626A4800A6E326 /* PermissionHelper.swift */,
+			);
+			path = "Support Files";
 			sourceTree = "<group>";
 		};
 		EA60A73F5E3AD2A724C897A0 /* Pods */ = {
@@ -259,7 +256,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				1971266C24618C0D00A6E326 /* SplitViewController.swift in Sources */,
 				1971265A24618A3A00A6E326 /* ViewController.swift in Sources */,
 				1971267F24626A4800A6E326 /* PermissionHelper.swift in Sources */,
 				197126722461B08F00A6E326 /* SquareImageCell.swift in Sources */,
